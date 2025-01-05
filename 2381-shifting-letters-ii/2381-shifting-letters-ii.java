@@ -1,14 +1,12 @@
 class Solution {
-public:
-    string shiftingLetters(string s, vector<vector<int>>& shifts) {
-        int n = s.size();
-        vector<int> shift(n + 1, 0);
+    public String shiftingLetters(String s, int[][] shifts) {
+        int n = s.length();
+        int[] shift = new int[n + 1];
 
-        // Process the shifts
-        for (auto& shiftOp : shifts) {
+        for (int[] shiftOp : shifts) {
             int start = shiftOp[0], end = shiftOp[1], direction = shiftOp[2];
             shift[start] += (direction == 1 ? 1 : -1);
-            shift[end + 1] -= (direction == 1 ? 1 : -1);
+            if (end + 1 < n) shift[end + 1] -= (direction == 1 ? 1 : -1);
         }
 
         int currentShift = 0;
@@ -17,11 +15,12 @@ public:
             shift[i] = currentShift;
         }
 
+        StringBuilder result = new StringBuilder(s);
         for (int i = 0; i < n; ++i) {
             int netShift = (shift[i] % 26 + 26) % 26;
-            s[i] = 'a' + (s[i] - 'a' + netShift) % 26;
+            result.setCharAt(i, (char) ('a' + (s.charAt(i) - 'a' + netShift) % 26));
         }
 
-        return s;
+        return result.toString();
     }
-};
+}
