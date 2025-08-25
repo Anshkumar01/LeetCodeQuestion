@@ -1,25 +1,46 @@
-public class Solution {
-    public int[] findDiagonalOrder(int[][] matrix) {
-        if (matrix == null || matrix.length == 0) return new int[0];
+class Solution {
+    public int[] findDiagonalOrder(int[][] mat) {
+        // Edge case
+        if (mat.length == 0 || mat[0].length == 0) {
+            return new int[0];
+        }
+        
+        int m = mat.length, n = mat[0].length; // Row (m) x Column (n)
+        int row = 0, col = 0; // Initial starting point
+        int index = 0;
+        int[] arr = new int[m * n];
+        boolean up = true;
 
-        int m = matrix.length, n = matrix[0].length;
-        int[] result = new int[m * n];
-        int row = 0, col = 0;
+        while (index < m * n) {
+            arr[index++] = mat[row][col]; // Add current element
 
-        for (int i = 0; i < m * n; i++) {
-            result[i] = matrix[row][col];
-
-            if ((row + col) % 2 == 0) {
-                if (col == n - 1) row++;
-                else if (row == 0) col++;
-                else { row--; col++; }
-            } else {
-                if (row == m - 1) col++;
-                else if (col == 0) row++;
-                else { row++; col--; }
+            // If moving upward
+            if (up) {
+                if (col == n - 1) { // Reached the last column
+                    row++;
+                    up = false;
+                } else if (row == 0) { // Reached the first row
+                    col++;
+                    up = false;
+                } else { // Continue moving up
+                    row--;
+                    col++;
+                }
+            } 
+            // If moving downward
+            else {
+                if (row == m - 1) { // Reached the last row
+                    col++;
+                    up = true;
+                } else if (col == 0) { // Reached the first column
+                    row++;
+                    up = true;
+                } else { // Continue moving down
+                    row++;
+                    col--;
+                }
             }
         }
-
-        return result;
+        return arr;
     }
 }
