@@ -1,25 +1,38 @@
 class Solution {
     public int countPalindromicSubsequence(String s) {
-        char[] c = s.toCharArray();
-        boolean[] v = new boolean[128];
-        int a=0, t=0;
+        int n = s.length();
+        int[] first = new int[26];
+        int[] last = new int[26];
+        Arrays.fill(first, n);
+        Arrays.fill(last, -1);
 
-        int l, r;
-        for(char x='a'; x<='z'; x++){
-            for(l=0; l<c.length && c[l]!=x; l++);
-            if(l==c.length)continue;
-            for(r=c.length-1; r>=0 && c[r]!=x; r--);
-            if(l>=r)continue;
+        // find first & last
+        for (int i = 0; i < n; i++) {
+            int c = s.charAt(i) - 'a';
+            first[c] = Math.min(first[c], i);
+            last[c] = i;
+        }
 
-            Arrays.fill(v, false); t=0;
-            for(int i=l+1; i<r; i++){
-                if(!v[c[i]]){
-                    v[c[i]]=true; t++;
-                    if(t==26)break;
+        int res = 0;
+
+        // for each character as the outer sides
+        for (int c = 0; c < 26; c++) {
+            int L = first[c];
+            int R = last[c];
+            if (R - L < 2) continue; // no space inside
+            
+            boolean[] memo = new boolean[26];
+
+            // scan only between L and R
+            for (int i = L + 1; i < R; i++) {
+                int idx = s.charAt(i) - 'a';
+                if (!memo[idx]) {
+                    memo[idx] = true;
+                    res++;
                 }
             }
-            a+=t;
         }
-        return a;
+
+        return res;
     }
 }
